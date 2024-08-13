@@ -1,6 +1,7 @@
 package com.plenamente.sgt.service.impl;
 
 import com.plenamente.sgt.domain.dto.UserDto.RegisterUser;
+import com.plenamente.sgt.domain.entity.AdminTherapist;
 import com.plenamente.sgt.domain.entity.Rol;
 import com.plenamente.sgt.domain.entity.Secretary;
 import com.plenamente.sgt.domain.entity.Therapist;
@@ -54,7 +55,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenResponse addUser(RegisterUser data) {
-        User user = UserFactory.createUser(data.role());
+        // Aquí podrías agregar una lógica para determinar si un Admin también es un Terapeuta
+        boolean isAlsoTherapist = data.pasoSesion() != null;
+        User user = UserFactory.createUser(data.role(), isAlsoTherapist);
 
         // atributos comunes a todos los usuarios
         user.setName(data.name());
@@ -75,6 +78,8 @@ public class UserServiceImpl implements UserService {
             ((Therapist) user).setPasoSesion(data.pasoSesion());
         } else if (user instanceof Secretary) {
             ((Secretary) user).setPagoMensual(data.pagoMensual());
+        } else if (user instanceof AdminTherapist) {
+            ((AdminTherapist) user).setPasoSesion(data.pasoSesion());
         }
 
         userRepository.save(user);
