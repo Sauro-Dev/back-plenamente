@@ -27,8 +27,10 @@ public class UserController {
 
     @PostMapping("/register")
     @Transactional
-    public ResponseEntity<TokenResponse> addUser(@RequestBody @Valid RegisterUser date) {
-        return ResponseEntity.ok(userService.addUser(date));
+    public ResponseEntity<?> addUser(@RequestBody @Valid RegisterUser data) {
+        return ResponseEntity.ok(userService.addUser(data));
     }
+
+
 
 }
