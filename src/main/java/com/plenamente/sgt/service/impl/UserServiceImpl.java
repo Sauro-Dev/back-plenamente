@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenResponse addUser(RegisterUser data) {
-        // Aquí podrías agregar una lógica para determinar si un Admin también es un Terapeuta
         boolean isAlsoTherapist = data.pasoSesion() != null;
         User user = UserFactory.createUser(data.role(), isAlsoTherapist);
 
@@ -80,7 +79,9 @@ public class UserServiceImpl implements UserService {
             ((Secretary) user).setPagoMensual(data.pagoMensual());
         } else if (user instanceof AdminTherapist) {
             ((AdminTherapist) user).setPasoSesion(data.pasoSesion());
+            System.out.println("PasoSesion for AdminTherapist: " + ((AdminTherapist) user).getPasoSesion());
         }
+
 
         userRepository.save(user);
 
@@ -89,4 +90,5 @@ public class UserServiceImpl implements UserService {
                 .token(token)
                 .build();
     }
+
 }
