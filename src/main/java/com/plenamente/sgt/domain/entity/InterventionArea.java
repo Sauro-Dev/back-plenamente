@@ -8,19 +8,19 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "areaIntervencion")
+@Table(name = "intervention_area")
 @Getter
 @Setter
 @NoArgsConstructor
-public class AreaIntervencion {
+public class InterventionArea {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAreaIntervencion;
+    private Long id;
 
-    private String nombre;
-    private String descripcion;
+    private String name;
+    private String description;
 
-    @OneToMany(mappedBy = "areaIntervencion")
-    private List<AreaMaterial> areaMaterials;
+    @OneToMany(mappedBy = "interventionArea")
+    private List<MaterialArea> materialAreas;
 }

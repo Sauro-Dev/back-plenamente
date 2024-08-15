@@ -6,17 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "areaMaterial")
+@Table(name = "material_area")
 @Getter
 @Setter
 @NoArgsConstructor
-public class AreaMaterial {
+public class MaterialArea {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAreaMaterial;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "idAreaIntervencion", nullable = false)
-    private AreaIntervencion areaIntervencion;
+    @JoinColumn(name = "intervention_area_id", nullable = false)
+    private InterventionArea interventionArea;
+    
 }
