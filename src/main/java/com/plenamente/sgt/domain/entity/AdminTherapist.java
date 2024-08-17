@@ -6,11 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+@Entity(name = "AdminTherapist")
 @Table(name = "admin_therapists")
 @Getter
 @Setter
 @NoArgsConstructor
 public class AdminTherapist extends Admin {
-    private Double pasoSesion;
+    private Double paymentSession;
 }

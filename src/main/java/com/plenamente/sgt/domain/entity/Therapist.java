@@ -10,5 +10,5 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class Therapist extends User {
-    private double pasoSesion;
+    private double paymentSession;
 }

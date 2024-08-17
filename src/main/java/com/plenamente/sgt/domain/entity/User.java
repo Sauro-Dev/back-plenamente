@@ -10,13 +10,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "User")
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,7 +41,7 @@ public abstract class User implements UserDetails {
     @Column(unique = true)
     private String phone;
     private String phoneBackup;
-    private String photo;
+    private LocalDate birthdate;
     private boolean enabled = true;
 
     @Override

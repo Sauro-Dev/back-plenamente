@@ -10,5 +10,5 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class Secretary extends User {
-    private double pagoMensual;
+    private double paymentMonthly;
 }

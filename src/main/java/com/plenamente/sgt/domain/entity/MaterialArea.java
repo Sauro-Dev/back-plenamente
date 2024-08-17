@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "material_area")
+@Entity(name = "MaterialArea")
+@Table(name = "material_areas")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,10 +14,9 @@ public class MaterialArea {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "intervention_area_id", nullable = false)
+    private Long idMaterialArea;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "intervention_area_id")
     private InterventionArea interventionArea;
-    
+
 }
