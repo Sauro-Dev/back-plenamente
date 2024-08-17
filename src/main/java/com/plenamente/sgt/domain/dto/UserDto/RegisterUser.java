@@ -1,9 +1,11 @@
 package com.plenamente.sgt.domain.dto.UserDto;
 
 import com.plenamente.sgt.domain.entity.Rol;
-import jakarta.persistence.Lob;
+
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
+
+import java.time.LocalDate;
 
 public record RegisterUser(
         @NotBlank @Length(max = 100) String name,
@@ -14,12 +16,12 @@ public record RegisterUser(
         @NotNull @Pattern(regexp = "\\d{8}") String dni,
         @NotBlank @Email @Length(max = 100) String email,
         @Length(max = 100) String address,
-        @Lob String photo,
+        @NotNull LocalDate birthdate,
         @NotBlank @Length(max = 100) String username,
         @NotBlank @Length(max = 100) String password,
         @NotNull Rol role,  // campo para determinar el rol
-        Double pasoSesion,  // campo opcional para Therapist
-        Double pagoMensual  // campo opcional para Secretary
+        Double paymentSession,  // campo opcional para Therapist
+        Double paymentMonthly  // campo opcional para Secretary
 ) {
 
 }

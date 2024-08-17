@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Bean;
+import java.time.LocalDate;
 
 @SpringBootApplication
 @RequiredArgsConstructor
@@ -34,8 +35,8 @@ public class SgtApplication {
 				defaultAdmin.setPhone("000000000");
 				defaultAdmin.setPhoneBackup("000000000");
 				defaultAdmin.setAddress("Admin Address");
-				defaultAdmin.setPhoto(null); // O algún valor por defecto
 				defaultAdmin.setEmail("admin@example.com");
+				defaultAdmin.setBirthdate(LocalDate.parse("2021-01-01"));
 				defaultAdmin.setUsername("admin");
 				defaultAdmin.setPassword(passwordEncoder.encode("admin123"));
 				defaultAdmin.setRol(Rol.ADMIN);

@@ -1,7 +1,5 @@
 package com.plenamente.sgt.service.impl;
 
-import com.plenamente.sgt.domain.dto.MaterialAreaDto.CreateAreaForMaterial;
-import com.plenamente.sgt.domain.dto.MaterialAreaDto.UpdateMaterialArea;
 import com.plenamente.sgt.domain.entity.InterventionArea;
 import com.plenamente.sgt.domain.entity.MaterialArea;
 import com.plenamente.sgt.infra.exception.ResourceNotFoundException;
@@ -19,23 +17,20 @@ public class MaterialAreaServiceImpl implements MaterialAreaService {
     private final InterventionAreaRepository interventionAreaRepository;
 
     @Override
-    public MaterialArea createAreaForMaterial(CreateAreaForMaterial dto) {
-        InterventionArea interventionArea = interventionAreaRepository.findById(dto.interventionAreaId())
-                .orElseThrow(() -> new ResourceNotFoundException("Intervention Area not found with id: " + dto.interventionAreaId()));
+    public MaterialArea createAreaForMaterial(String interventionAreaName) {
+        InterventionArea interventionArea = interventionAreaRepository.findByName(interventionAreaName)
+                .orElseThrow(() -> new ResourceNotFoundException("Área de intervención no encontrada con nombre: " + interventionAreaName));
 
         MaterialArea materialArea = new MaterialArea();
         materialArea.setInterventionArea(interventionArea);
-        materialArea.setMaterialDescription(dto.materialDescription());
 
         return materialAreaRepository.save(materialArea);
     }
 
     @Override
-    public MaterialArea updateMaterialArea(Long id, UpdateMaterialArea dto) {
+    public MaterialArea updateMaterialArea(Long id) {
         MaterialArea materialArea = materialAreaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Material Area not found with id: " + id));
-
-        materialArea.setMaterialDescription(dto.materialDescription());
+                .orElseThrow(() -> new ResourceNotFoundException("Área de material no encontrada con id: " + id));
 
         return materialAreaRepository.save(materialArea);
     }

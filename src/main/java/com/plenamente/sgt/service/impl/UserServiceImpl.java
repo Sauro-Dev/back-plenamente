@@ -2,7 +2,6 @@ package com.plenamente.sgt.service.impl;
 
 import com.plenamente.sgt.domain.dto.UserDto.RegisterUser;
 import com.plenamente.sgt.domain.entity.AdminTherapist;
-import com.plenamente.sgt.domain.entity.Rol;
 import com.plenamente.sgt.domain.entity.Secretary;
 import com.plenamente.sgt.domain.entity.Therapist;
 import com.plenamente.sgt.domain.entity.User;
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenResponse addUser(RegisterUser data) {
-        boolean isAlsoTherapist = data.pasoSesion() != null;
+        boolean isAlsoTherapist = data.paymentSession() != null;
         User user = UserFactory.createUser(data.role(), isAlsoTherapist);
 
         // atributos comunes a todos los usuarios
@@ -66,7 +65,7 @@ public class UserServiceImpl implements UserService {
         user.setPhone(data.phone());
         user.setPhoneBackup(data.phoneBackup());
         user.setAddress(data.address());
-        user.setPhoto(data.photo());
+        user.setBirthdate(data.birthdate());
         user.setEmail(data.email());
         user.setUsername(data.username());
         user.setPassword(passwordEncoder.encode(data.password()));
@@ -74,12 +73,11 @@ public class UserServiceImpl implements UserService {
 
         // atributos específicos de cada tipo de usuario
         if (user instanceof Therapist) {
-            ((Therapist) user).setPasoSesion(data.pasoSesion());
+            ((Therapist) user).setPaymentSession(data.paymentSession());
         } else if (user instanceof Secretary) {
-            ((Secretary) user).setPagoMensual(data.pagoMensual());
+            ((Secretary) user).setPaymentMonthly(data.paymentMonthly());
         } else if (user instanceof AdminTherapist) {
-            ((AdminTherapist) user).setPasoSesion(data.pasoSesion());
-            System.out.println("PasoSesion for AdminTherapist: " + ((AdminTherapist) user).getPasoSesion());
+            ((AdminTherapist) user).setPaymentSession(data.paymentSession());
         }
 
 
