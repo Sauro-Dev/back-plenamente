@@ -10,9 +10,6 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,28 +25,25 @@ public class UserController {
 
     @PostMapping("/login")
     @Transactional
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        TokenResponse tokenResponse = userService.login(request);
-        return ResponseEntity.ok(tokenResponse);
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(userService.login(request));
     }
 
     @PostMapping("/register")
     @Transactional
-    public ResponseEntity<?> addUser(@RequestBody @Valid RegisterUser data) {
+    public ResponseEntity<TokenResponse> addUser(@RequestBody @Valid RegisterUser data) {
+        authorizationService.authorizeRegisterUser();
         return ResponseEntity.ok(userService.addUser(data));
     }
 
-    // New method to get the current logged-in user
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal Authentication authentication) {
-        return ResponseEntity.ok(userService.getCurrentUser(authentication.getName()));
+    public ResponseEntity<ListUser> getCurrentUser() {
+        return ResponseEntity.ok(userService.getCurrentUser());
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<List<ListUser>> getAllUsers() {
         authorizationService.authorizeRegisterUser();
-        List<ListUser> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userService.getAllUsers());
     }
-
 }

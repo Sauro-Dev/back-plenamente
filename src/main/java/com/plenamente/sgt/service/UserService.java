@@ -12,7 +12,7 @@ public interface UserService {
 
     TokenResponse addUser(RegisterUser usuario);
 
-    ListUser getCurrentUser(String username);
+    ListUser getCurrentUser();
 
     List<ListUser> getAllUsers();
 }

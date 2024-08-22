@@ -92,7 +92,10 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
     @Override
-    public ListUser getCurrentUser(String username) {
+    public ListUser getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con username: " + username));
 
