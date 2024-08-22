@@ -1,5 +1,6 @@
 package com.plenamente.sgt.service.impl;
 
+import com.plenamente.sgt.domain.dto.UserDto.ListUser;
 import com.plenamente.sgt.domain.dto.UserDto.RegisterUser;
 import com.plenamente.sgt.domain.entity.AdminTherapist;
 import com.plenamente.sgt.domain.entity.Secretary;
@@ -21,6 +22,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -87,6 +90,20 @@ public class UserServiceImpl implements UserService {
         return TokenResponse.builder()
                 .token(token)
                 .build();
+    }
+    @Override
+    public ListUser getCurrentUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con username: " + username));
+
+        return new ListUser(user.getIdUser(), user.getUsername(), user.getName(), user.getEmail(), user.getRol());
+    }
+
+    @Override
+    public List<ListUser> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new ListUser(user.getIdUser(), user.getUsername(), user.getName(), user.getEmail(), user.getRol()))
+                .collect(Collectors.toList());
     }
 
 }
