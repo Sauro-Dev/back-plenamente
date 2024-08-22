@@ -1,4 +1,11 @@
 package com.plenamente.sgt.domain.dto.UserDto;
 
-public record ListUser() {
-}
+import com.plenamente.sgt.domain.entity.Rol;
+
+public record ListUser(
+        Long id,
+        String username,
+        String name,
+        String email,
+        Rol role
+) {}
