@@ -73,12 +73,22 @@ public class UserServiceImpl implements UserService {
 
         // atributos específicos de cada tipo de usuario
         if (user instanceof Therapist) {
-            ((Therapist) user).setPaymentSession(data.paymentSession());
+            Double paymentSession = data.paymentSession();
+            if (paymentSession != null) {
+                ((Therapist) user).setPaymentSession(paymentSession);
+            }
         } else if (user instanceof Secretary) {
-            ((Secretary) user).setPaymentMonthly(data.paymentMonthly());
+            Double paymentMonthly = data.paymentMonthly();
+            if (paymentMonthly != null) {
+                ((Secretary) user).setPaymentMonthly(paymentMonthly);
+            }
         } else if (user instanceof AdminTherapist) {
-            ((AdminTherapist) user).setPaymentSession(data.paymentSession());
+            Double paymentSession = data.paymentSession();
+            if (paymentSession != null) {
+                ((AdminTherapist) user).setPaymentSession(paymentSession);
+            }
         }
+
 
 
         userRepository.save(user);
