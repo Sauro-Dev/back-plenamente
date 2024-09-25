@@ -71,7 +71,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(data.password()));
         user.setRol(data.role());
 
-        // atributos específicos de cada tipo de usuario
         if (user instanceof Therapist) {
             Double paymentSession = data.paymentSession();
             if (paymentSession != null) {
