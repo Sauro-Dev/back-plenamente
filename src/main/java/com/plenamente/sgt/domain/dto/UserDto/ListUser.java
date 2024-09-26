@@ -7,5 +7,11 @@ public record ListUser(
         String username,
         String name,
         String email,
-        Rol role
+        Rol role,
+        String paternalSurname,
+        String maternalSurname,
+        String dni,
+        String phone,
+        String phoneBackup,
+        String address
 ) {}
