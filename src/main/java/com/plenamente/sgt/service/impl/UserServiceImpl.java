@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService {
         boolean isAlsoTherapist = data.paymentSession() != null;
         User user = UserFactory.createUser(data.role(), isAlsoTherapist);
 
-        // atributos comunes a todos los usuarios
         user.setName(data.name());
         user.setPaternalSurname(data.paternalSurname());
         user.setMaternalSurname(data.maternalSurname());
@@ -74,6 +73,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(data.password()));
         user.setRol(data.role());
 
+        // Lógica adicional para roles específicos
         if (user instanceof Therapist) {
             Double paymentSession = data.paymentSession();
             if (paymentSession != null) {
@@ -91,8 +91,6 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-
-
         userRepository.save(user);
 
         String token = jwtService.getToken(user, user);
@@ -100,6 +98,8 @@ public class UserServiceImpl implements UserService {
                 .token(token)
                 .build();
     }
+
+
     @Override
     public ListUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -108,14 +108,41 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con username: " + username));
 
-        return new ListUser(user.getIdUser(), user.getUsername(), user.getName(), user.getEmail(), user.getRol());
+        return new ListUser(
+                user.getIdUser(),
+                user.getUsername(),
+                user.getName(),
+                user.getEmail(),
+                user.getRol(),
+                user.getPaternalSurname(),
+                user.getMaternalSurname(),
+                user.getDni(),
+                user.getPhone(),
+                user.getPhoneBackup(),
+                user.getAddress()  // nuevo campo
+        );
     }
+
+
 
     @Override
     public List<ListUser> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> new ListUser(user.getIdUser(), user.getUsername(), user.getName(), user.getEmail(), user.getRol()))
+                .map(user -> new ListUser(
+                        user.getIdUser(),
+                        user.getUsername(),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getRol(),
+                        user.getPaternalSurname(),
+                        user.getMaternalSurname(),
+                        user.getDni(),
+                        user.getPhone(),
+                        user.getPhoneBackup(),
+                        user.getAddress()  // nuevo campo
+                ))
                 .collect(Collectors.toList());
     }
+
 
 }
