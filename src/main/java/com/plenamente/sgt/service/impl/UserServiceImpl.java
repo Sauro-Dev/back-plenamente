@@ -99,32 +99,6 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-
-    @Override
-    public ListUser getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con username: " + username));
-
-        return new ListUser(
-                user.getIdUser(),
-                user.getUsername(),
-                user.getName(),
-                user.getEmail(),
-                user.getRol(),
-                user.getPaternalSurname(),
-                user.getMaternalSurname(),
-                user.getDni(),
-                user.getPhone(),
-                user.getPhoneBackup(),
-                user.getAddress()  // nuevo campo
-        );
-    }
-
-
-
     @Override
     public List<ListUser> getAllUsers() {
         return userRepository.findAll().stream()
@@ -143,6 +117,26 @@ public class UserServiceImpl implements UserService {
                 ))
                 .collect(Collectors.toList());
     }
+    @Override
+    public ListUser getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con id: " + id));
+
+        return new ListUser(
+                user.getIdUser(),
+                user.getUsername(),
+                user.getName(),
+                user.getEmail(),
+                user.getRol(),
+                user.getPaternalSurname(),
+                user.getMaternalSurname(),
+                user.getDni(),
+                user.getPhone(),
+                user.getPhoneBackup(),
+                user.getAddress()
+        );
+    }
+
 
 
 }

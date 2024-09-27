@@ -12,7 +12,8 @@ public interface UserService {
 
     TokenResponse addUser(RegisterUser usuario);
 
-    ListUser getCurrentUser();
+    ListUser getUserById(Long id);
 
     List<ListUser> getAllUsers();
 }
+

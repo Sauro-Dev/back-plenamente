@@ -36,9 +36,9 @@ public class UserController {
         return ResponseEntity.ok(userService.addUser(data));
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<ListUser> getCurrentUser() {
-        return ResponseEntity.ok(userService.getCurrentUser());
+    @GetMapping("/select/{id}")
+    public ResponseEntity<ListUser> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @GetMapping("/all")
