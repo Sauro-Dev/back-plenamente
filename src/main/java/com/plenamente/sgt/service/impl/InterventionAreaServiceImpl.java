@@ -6,6 +6,8 @@ import com.plenamente.sgt.service.InterventionAreaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class InterventionAreaServiceImpl implements InterventionAreaService {
@@ -19,5 +21,11 @@ public class InterventionAreaServiceImpl implements InterventionAreaService {
         interventionArea.setDescription(description);
         return interventionAreaRepository.save(interventionArea);
     }
+
+    @Override
+    public List<InterventionArea> getAllInterventionAreas() {
+        return interventionAreaRepository.findAll();
+    }
+
 
 }
