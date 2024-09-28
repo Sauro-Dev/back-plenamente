@@ -20,4 +20,11 @@ public class RoomController {
         Room newRoom = roomService.registerRoom(room);
         return ResponseEntity.ok(newRoom);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Room>> listRooms() {
+        List<Room> rooms = roomService.listRooms();
+        return ResponseEntity.ok(rooms);
+    }
+
 }
