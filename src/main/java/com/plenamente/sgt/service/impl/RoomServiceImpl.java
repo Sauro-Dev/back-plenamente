@@ -24,5 +24,11 @@ public class RoomServiceImpl implements RoomService {
         }
         return roomRepository.save(room);
     }
+
+    @Override
+    public List<Room> listRooms() {
+        return roomRepository.findAll();
+    }
+
 }
 
