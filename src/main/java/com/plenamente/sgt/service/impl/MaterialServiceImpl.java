@@ -27,7 +27,7 @@ public class MaterialServiceImpl implements MaterialService {
         material.setStock(dto.stock());
         material.setEsCompleto(dto.esCompleto());
         material.setEsSoporte(dto.esSoporte());
-
+        material.setEstado(dto.estado());
         // Guardar el material
         return materialRepository.save(material);
     }

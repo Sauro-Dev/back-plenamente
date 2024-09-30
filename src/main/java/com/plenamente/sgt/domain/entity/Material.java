@@ -35,6 +35,5 @@ public class Material {
     @PrePersist
     public void prePersist() {
         this.fechaAlta = LocalDateTime.now();
-        this.estado = MaterialStatus.NUEVO;  // Estado por defecto
     }
 }
