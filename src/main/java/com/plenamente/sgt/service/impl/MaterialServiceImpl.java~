@@ -2,6 +2,7 @@ package com.plenamente.sgt.service.impl;
 
 import com.plenamente.sgt.domain.dto.MaterialDto.RegisterMaterial;
 import com.plenamente.sgt.domain.entity.Material;
+import com.plenamente.sgt.domain.entity.MaterialStatus;
 import com.plenamente.sgt.infra.repository.MaterialRepository;
 import com.plenamente.sgt.service.MaterialService;
 import jakarta.persistence.EntityNotFoundException;

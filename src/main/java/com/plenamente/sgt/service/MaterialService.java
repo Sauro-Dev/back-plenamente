@@ -8,4 +8,6 @@ import java.util.List;
 public interface MaterialService {
     Material registerMaterial(RegisterMaterial dto);
     List<Material> getAllMaterials();
+    Material getMaterialById(String id);
+    Material updateMaterial(String id, RegisterMaterial updatedMaterial);
 }

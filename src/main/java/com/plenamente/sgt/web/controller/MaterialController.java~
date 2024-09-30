@@ -34,12 +34,4 @@ public class MaterialController {
         Material material = materialService.getMaterialById(id);
         return new ResponseEntity<>(material, HttpStatus.OK);
     }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Material> updateMaterial(
-            @PathVariable String id,
-            @RequestBody RegisterMaterial updatedMaterial) {
-        Material updated = materialService.updateMaterial(id, updatedMaterial);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
-    }
 }
