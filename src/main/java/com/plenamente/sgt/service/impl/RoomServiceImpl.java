@@ -30,5 +30,8 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.findAll();
     }
 
+    @Override
+    public List<Room> listRoomsByIsTherapeutic(boolean isTherapeutic) {
+        return roomRepository.findByIsTherapeutic(isTherapeutic);
+    }
 }
-

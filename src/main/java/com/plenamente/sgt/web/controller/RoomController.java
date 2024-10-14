@@ -27,4 +27,9 @@ public class RoomController {
         return ResponseEntity.ok(rooms);
     }
 
+    @GetMapping("/therapeutic")
+    public ResponseEntity<List<Room>> listRoomsByIsTherapeutic(@RequestParam boolean isTherapeutic) {
+        List<Room> rooms = roomService.listRoomsByIsTherapeutic(isTherapeutic);
+        return ResponseEntity.ok(rooms);
+    }
 }
