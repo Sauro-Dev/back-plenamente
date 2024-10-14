@@ -15,5 +15,5 @@ public class Room {
     private Long idRoom;
     private String name;
     private String address;
-    private boolean isTherapeutic;
+    private Boolean isTherapeutic;
 }
