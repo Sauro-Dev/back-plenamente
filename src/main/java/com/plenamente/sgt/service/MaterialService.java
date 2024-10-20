@@ -10,4 +10,6 @@ public interface MaterialService {
     List<Material> getAllMaterials();
     Material getMaterialById(String id);
     Material updateMaterial(String id, RegisterMaterial updatedMaterial);
+    String generateNextMaterialId();
+    String incrementAlphaPart(String alphaPart);
 }
