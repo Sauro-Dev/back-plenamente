@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +20,19 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public Material registerMaterial(RegisterMaterial dto) {
         Material material = new Material();
+
+        // Generar el ID para el nuevo material
+        String generatedId = generateNextMaterialId();  // Generar el ID incremental
+        material.setIdMaterial(generatedId);  // Asignar el ID al material
+
         material.setNombre(dto.nombre());
         material.setDescripcion(dto.descripcion());
         material.setStock(dto.stock());
         material.setEsCompleto(dto.esCompleto());
         material.setEsSoporte(dto.esSoporte());
         material.setEstado(dto.estado());
-        return materialRepository.save(material);
+
+        return materialRepository.save(material);  // Guardar el material en la base de datos
     }
 
     @Override
@@ -37,7 +42,8 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public Material getMaterialById(String id) {
-        return materialRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Material no encontrado con id: " + id));
+        return materialRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Material no encontrado con id: " + id));
     }
 
     @Override
@@ -57,7 +63,7 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public String generateNextMaterialId() {
-        // Obtener el último ID insertado (puedes ordenar por el campo transactionId)
+        // Obtener el último ID insertado
         Optional<Material> lastMaterialOpt = materialRepository.findTopByOrderByIdMaterialDesc();
 
         String lastMaterialId = lastMaterialOpt.map(Material::getIdMaterial).orElse("A000");
@@ -72,8 +78,7 @@ public class MaterialServiceImpl implements MaterialService {
         // Si la parte numérica llega a 1000, reiniciarla y pasar a la siguiente letra
         if (numericPart > 999) {
             numericPart = 1;  // Reiniciar la parte numérica
-            // Incrementar la parte alfabética (A-Z)
-            alphaPart = incrementAlphaPart(alphaPart);
+            alphaPart = incrementAlphaPart(alphaPart);  // Incrementar la letra
         }
 
         // Formatear el nuevo ID (A001, B001, etc.)
