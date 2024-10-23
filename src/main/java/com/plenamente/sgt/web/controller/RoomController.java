@@ -1,15 +1,20 @@
 package com.plenamente.sgt.web.controller;
 
+import com.plenamente.sgt.domain.entity.Material;
 import com.plenamente.sgt.domain.entity.Room;
 import com.plenamente.sgt.service.RoomService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/v1/rooms")
+@RequiredArgsConstructor
 public class RoomController {
 
     @Autowired
@@ -31,5 +36,11 @@ public class RoomController {
     public ResponseEntity<List<Room>> listRoomsByIsTherapeutic(@RequestParam boolean isTherapeutic) {
         List<Room> rooms = roomService.listRoomsByIsTherapeutic(isTherapeutic);
         return ResponseEntity.ok(rooms);
+    }
+
+    @GetMapping("/{roomId}/materials")
+    public ResponseEntity<List<Material>> getMaterialsByRoom(@PathVariable Long roomId) {
+        List<Material> materials = roomService.getMaterialsByRoom(roomId);
+        return ResponseEntity.ok(materials);
     }
 }

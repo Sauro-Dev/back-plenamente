@@ -2,7 +2,9 @@ package com.plenamente.sgt.service.impl;
 
 import com.plenamente.sgt.domain.dto.MaterialDto.RegisterMaterial;
 import com.plenamente.sgt.domain.entity.Material;
+import com.plenamente.sgt.domain.entity.Room;
 import com.plenamente.sgt.infra.repository.MaterialRepository;
+import com.plenamente.sgt.infra.repository.RoomRepository;
 import com.plenamente.sgt.service.MaterialService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class MaterialServiceImpl implements MaterialService {
 
     private final MaterialRepository materialRepository;
+    private final RoomRepository roomRepository;
 
     @Override
     public Material registerMaterial(RegisterMaterial dto) {
@@ -97,4 +100,31 @@ public class MaterialServiceImpl implements MaterialService {
 
         return String.valueOf(nextChar);
     }
+
+    @Override
+    public Material assignMaterialToRoom(String materialId, Long roomId) {
+        Material material = materialRepository.findById(materialId)
+                .orElseThrow(() -> new EntityNotFoundException("Material no encontrado con id: " + materialId));
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room no encontrado con id: " + roomId));
+
+        material.setRoom(room);
+        return materialRepository.save(material);
+    }
+
+    @Override
+    public Material unassignMaterialFromRoom(String materialId) {
+        Material material = materialRepository.findById(materialId)
+                .orElseThrow(() -> new EntityNotFoundException("Material no encontrado con id: " + materialId));
+
+        material.setRoom(null);  // Desasignamos el material de cualquier sala
+        return materialRepository.save(material);
+    }
+
+    @Override
+    public List<Material> getUnassignedMaterials() {
+        return materialRepository.findByRoomIsNull();
+    }
+
 }
