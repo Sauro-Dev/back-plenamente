@@ -1,7 +1,10 @@
 package com.plenamente.sgt.service.impl;
 
+import com.plenamente.sgt.domain.entity.InterventionArea;
 import com.plenamente.sgt.domain.entity.Material;
+import com.plenamente.sgt.domain.entity.MaterialArea;
 import com.plenamente.sgt.domain.entity.Room;
+import com.plenamente.sgt.infra.repository.InterventionAreaRepository;
 import com.plenamente.sgt.infra.repository.MaterialRepository;
 import com.plenamente.sgt.infra.repository.RoomRepository;
 import com.plenamente.sgt.service.MaterialService;
@@ -18,9 +21,30 @@ public class MaterialServiceImpl implements MaterialService {
 
     private final MaterialRepository materialRepository;
     private final RoomRepository roomRepository;
+    private final InterventionAreaRepository interventionAreaRepository;
 
     @Override
-    public Material registerMaterial(Material material) {
+    public Material registerMaterial(Material material, Long roomId, List<Long> interventionAreaIds) {
+        // Asignar la sala al material
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Sala no encontrado con id: " + roomId));
+        material.setRoom(room);
+
+        // Asignar las areas de intervencion al material
+        List<MaterialArea> materialAreas = interventionAreaIds.stream()
+                .map(interventionAreaId -> {
+                    InterventionArea interventionArea = interventionAreaRepository.findById(interventionAreaId)
+                            .orElseThrow(() -> new EntityNotFoundException("Área de intervención no encontrada con id: " + interventionAreaId));
+
+                    MaterialArea materialArea = new MaterialArea();
+                    materialArea.setMaterial(material);
+                    materialArea.setInterventionArea(interventionArea);
+                    return materialArea;
+                }).toList();
+
+        // Establecer la lista de MaterialArea en el material
+        material.setMaterialAreas(materialAreas);
+
         // Generar el ID para el nuevo material
         String generatedId = generateNextMaterialId();  // Generar el ID incremental
         material.setIdMaterial(generatedId);  // Asignar el ID al material

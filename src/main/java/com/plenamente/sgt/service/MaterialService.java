@@ -6,7 +6,7 @@ import com.plenamente.sgt.domain.entity.Material;
 import java.util.List;
 
 public interface MaterialService {
-    Material registerMaterial(Material material);
+    Material registerMaterial(Material material, Long roomId, List<Long> interventionAreaIds);
     List<Material> getAllMaterials();
     Material getMaterialById(String id);
     Material updateMaterial(String id, Material material);

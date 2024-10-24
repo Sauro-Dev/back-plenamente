@@ -24,7 +24,7 @@ public class MaterialController {
     private final MaterialService materialService;
 
     @PostMapping("/register")
-    public ResponseEntity<Material> registerMaterial(@RequestBody RegisterMaterial dto) {
+    public ResponseEntity<MaterialById> registerMaterial(@RequestBody RegisterMaterial dto) {
 
         Material material = new Material();
         material.setName(dto.name().replace("\"","'"));
@@ -34,8 +34,31 @@ public class MaterialController {
         material.setSupport(dto.isSupport());
         material.setStatus(dto.status());
 
-        Material newMaterial = materialService.registerMaterial(material);
-        return new ResponseEntity<>(newMaterial, HttpStatus.CREATED);
+        Material newMaterial = materialService.registerMaterial(material, dto.roomId(), dto.interventionAreaIds());
+
+        // Obtener nombre de la sala
+        String roomName = newMaterial.getRoom() != null ? newMaterial.getRoom().getName() : "Sin área asignada";
+
+        // Obtener el nombre de las áreas
+        String areaNames = newMaterial.getMaterialAreas() != null && !newMaterial.getMaterialAreas().isEmpty()
+                ? newMaterial.getMaterialAreas().stream()
+                .map(ma -> ma.getInterventionArea().getName())
+                .collect(Collectors.joining(", "))
+                : "Sin áreas de intervención";
+
+        //Dto para la respuesta
+        MaterialById responseDto = new MaterialById(
+                newMaterial.getName(),
+                newMaterial.getStock(),
+                newMaterial.getDescription(),
+                newMaterial.getIsComplete(),
+                newMaterial.isSupport(),
+                newMaterial.getStatus(),
+                roomName,
+                areaNames,
+                newMaterial.getHighDate()
+        );
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
