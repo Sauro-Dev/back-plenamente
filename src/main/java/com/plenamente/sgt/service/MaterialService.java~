@@ -6,17 +6,10 @@ import com.plenamente.sgt.domain.entity.Material;
 import java.util.List;
 
 public interface MaterialService {
-    Material registerMaterial(Material material);
+    Material registerMaterial(RegisterMaterial dto);
     List<Material> getAllMaterials();
     Material getMaterialById(String id);
-    Material updateMaterial(String id, Material material);
+    Material updateMaterial(String id, RegisterMaterial updatedMaterial);
     String generateNextMaterialId();
     String incrementAlphaPart(String alphaPart);
-
-    Material assignMaterialToRoom(String materialId, Long roomId);
-
-    Material unassignMaterialFromRoom(String materialId);
-
-    List<Material> getUnassignedMaterials();
-
 }

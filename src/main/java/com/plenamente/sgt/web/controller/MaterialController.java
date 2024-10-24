@@ -9,6 +9,7 @@ import com.plenamente.sgt.service.MaterialService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -96,5 +97,25 @@ public class MaterialController {
 
         materialService.updateMaterial(id, material);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{materialId}/assign/{roomId}")
+    public ResponseEntity<Material> assignMaterialToRoom(
+            @PathVariable String materialId,
+            @PathVariable Long roomId) {
+        Material assignedMaterial = materialService.assignMaterialToRoom(materialId, roomId);
+        return new ResponseEntity<>(assignedMaterial, HttpStatus.OK);
+    }
+
+    @PostMapping("/{materialId}/unassign")
+    public ResponseEntity<Material> unassignMaterialFromRoom(@PathVariable String materialId) {
+        Material unassignedMaterial = materialService.unassignMaterialFromRoom(materialId);
+        return new ResponseEntity<>(unassignedMaterial, HttpStatus.OK);
+    }
+
+    @GetMapping("/unassigned")
+    public ResponseEntity<List<Material>> getUnassignedMaterials() {
+        List<Material> unassignedMaterials = materialService.getUnassignedMaterials();
+        return new ResponseEntity<>(unassignedMaterials, HttpStatus.OK);
     }
 }
