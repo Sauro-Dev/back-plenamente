@@ -50,4 +50,10 @@ public class RoomServiceImpl implements RoomService {
     public List<Room> listRoomsByIsTherapeutic(boolean isTherapeutic) {
         return roomRepository.findByIsTherapeutic(isTherapeutic);
     }
+
+    @Override
+    public Room getRoomById(Long roomId) {
+        return roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room no encontrado con id: " + roomId));
+    }
 }
