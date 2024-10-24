@@ -1,6 +1,5 @@
 package com.plenamente.sgt.service.impl;
 
-import com.plenamente.sgt.domain.dto.MaterialDto.RegisterMaterial;
 import com.plenamente.sgt.domain.entity.Material;
 import com.plenamente.sgt.infra.repository.MaterialRepository;
 import com.plenamente.sgt.service.MaterialService;
@@ -18,19 +17,10 @@ public class MaterialServiceImpl implements MaterialService {
     private final MaterialRepository materialRepository;
 
     @Override
-    public Material registerMaterial(RegisterMaterial dto) {
-        Material material = new Material();
-
+    public Material registerMaterial(Material material) {
         // Generar el ID para el nuevo material
         String generatedId = generateNextMaterialId();  // Generar el ID incremental
         material.setIdMaterial(generatedId);  // Asignar el ID al material
-
-        material.setNombre(dto.nombre());
-        material.setDescripcion(dto.descripcion());
-        material.setStock(dto.stock());
-        material.setEsCompleto(dto.esCompleto());
-        material.setEsSoporte(dto.esSoporte());
-        material.setEstado(dto.estado());
 
         return materialRepository.save(material);  // Guardar el material en la base de datos
     }
@@ -47,16 +37,16 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public Material updateMaterial(String id, RegisterMaterial updatedMaterial) {
+    public Material updateMaterial(String id, Material material) {
         Material existingMaterial = materialRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Material no encontrado con id: " + id));
 
-        existingMaterial.setNombre(updatedMaterial.nombre());
-        existingMaterial.setDescripcion(updatedMaterial.descripcion());
-        existingMaterial.setStock(updatedMaterial.stock());
-        existingMaterial.setEsCompleto(updatedMaterial.esCompleto());
-        existingMaterial.setEsSoporte(updatedMaterial.esSoporte());
-        existingMaterial.setEstado(updatedMaterial.estado());
+        existingMaterial.setName(material.getName());
+        existingMaterial.setDescription(material.getDescription());
+        existingMaterial.setStock(material.getStock());
+        existingMaterial.setIsComplete(material.getIsComplete());
+        existingMaterial.setSupport(material.isSupport());
+        existingMaterial.setStatus(material.getStatus());
 
         return materialRepository.save(existingMaterial);
     }

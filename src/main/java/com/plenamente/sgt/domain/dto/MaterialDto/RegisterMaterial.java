@@ -1,16 +1,18 @@
 package com.plenamente.sgt.domain.dto.MaterialDto;
 
 import com.plenamente.sgt.domain.entity.MaterialStatus;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
+import jdk.jfr.Enabled;
 
 public record RegisterMaterial(
-        @NotNull @Size(min = 1, max = 100) String nombre,
-        String descripcion,
-        @Min(0) int stock,
-        boolean esCompleto,
-        boolean esSoporte,
-        @NotNull MaterialStatus estado
+        @NotNull @Size(min = 1, max = 100) String name,
+        String description,
+        @Min(0) Integer stock,
+        Boolean isComplete,
+        @NotNull boolean isSupport,
+        MaterialStatus status,
+        String room,
+        String area
 ) {
 }

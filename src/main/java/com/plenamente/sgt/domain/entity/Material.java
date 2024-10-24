@@ -1,10 +1,11 @@
 package com.plenamente.sgt.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "materials")
@@ -16,28 +17,34 @@ public class Material {
     @Column(length = 4)
     private String idMaterial;
 
-    private String nombre;
+    @NotNull
+    @Size(min = 1, max = 100)
+    private String name;
 
-    private String descripcion;
+    private String description;
 
-    private int stock;
+    private Integer stock;
 
-    private boolean esCompleto;
+    private Boolean isComplete;
 
-    private boolean esSoporte;
+    @NotNull
+    private boolean isSupport;
 
     @Enumerated(EnumType.STRING)
-    private MaterialStatus estado;
+    private MaterialStatus status;
 
-    @Column(name = "fecha_alta", updatable = false)
-    private LocalDateTime fechaAlta;
+    @Column(name = "high_date", updatable = false)
+    private LocalDateTime highDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "id_room")
     private Room room;
+
+    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MaterialArea> materialAreas;
 
     @PrePersist
     public void prePersist() {
-        this.fechaAlta = LocalDateTime.now();
+        this.highDate = LocalDateTime.now();
     }
 }
