@@ -1,19 +1,22 @@
 package com.plenamente.sgt.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Getter
+@Setter
+@Table(name = "rooms")
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRoom;
+
+    @NotNull
     private String name;
     private String address;
-    private Boolean isTherapeutic;
+    private boolean isTherapeutic;
 }

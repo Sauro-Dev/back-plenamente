@@ -1,6 +1,6 @@
 package com.plenamente.sgt.domain.entity;
 
 public enum MaterialStatus {
-    NUEVO, BUENO, REGULAR, DESGASTADO, ROTO
+    NEW, GOOD, REGULAR, WORN, BROKE
 
 }

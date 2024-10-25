@@ -1,5 +1,6 @@
 package com.plenamente.sgt.web.controller;
 
+import com.plenamente.sgt.domain.dto.InterventionAreaDto.AllInterventionArea;
 import com.plenamente.sgt.domain.dto.InterventionAreaDto.CreateAreaForIntervention;
 import com.plenamente.sgt.domain.entity.InterventionArea;
 import com.plenamente.sgt.service.InterventionAreaService;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/intervention-areas")
-@CrossOrigin("")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 public class InterventionAreaController {
 
@@ -26,9 +27,15 @@ public class InterventionAreaController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<InterventionArea>> getAllInterventionAreas() {
+    public ResponseEntity<List<AllInterventionArea>> getAllInterventionAreas() {
         List<InterventionArea> areas = interventionAreaService.getAllInterventionAreas();
-        return new ResponseEntity<>(areas, HttpStatus.OK);
+        List<AllInterventionArea> dtoList = areas.stream()
+                .map(interventionArea -> new AllInterventionArea(
+                        interventionArea.getName(),
+                        interventionArea.getDescription()
+                ))
+                .toList();
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
 }

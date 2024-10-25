@@ -1,45 +1,144 @@
 package com.plenamente.sgt.web.controller;
 
+import com.plenamente.sgt.domain.dto.MaterialDto.AllMaterials;
+import com.plenamente.sgt.domain.dto.MaterialDto.MaterialById;
 import com.plenamente.sgt.domain.dto.MaterialDto.RegisterMaterial;
+import com.plenamente.sgt.domain.dto.MaterialDto.UpdateMaterial;
 import com.plenamente.sgt.domain.entity.Material;
 import com.plenamente.sgt.service.MaterialService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/materials")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 public class MaterialController {
 
     private final MaterialService materialService;
 
     @PostMapping("/register")
-    public ResponseEntity<Material> registerMaterial(@RequestBody RegisterMaterial dto) {
-        Material newMaterial = materialService.registerMaterial(dto);
-        return new ResponseEntity<>(newMaterial, HttpStatus.CREATED);
+    public ResponseEntity<MaterialById> registerMaterial(@RequestBody RegisterMaterial dto) {
+
+        Material material = new Material();
+        material.setName(dto.name().replace("\"","'"));
+        material.setDescription(dto.description());
+        material.setStock(dto.stock());
+        material.setIsComplete(dto.isComplete());
+        material.setSupport(dto.isSupport());
+        material.setStatus(dto.status());
+
+        Material newMaterial = materialService.registerMaterial(material, dto.roomId(), dto.interventionAreaIds());
+
+        // Obtener nombre de la sala
+        String roomName = newMaterial.getRoom() != null ? newMaterial.getRoom().getName() : "Sin área asignada";
+
+        // Obtener el nombre de las áreas
+        String areaNames = newMaterial.getMaterialAreas() != null && !newMaterial.getMaterialAreas().isEmpty()
+                ? newMaterial.getMaterialAreas().stream()
+                .map(ma -> ma.getInterventionArea().getName())
+                .collect(Collectors.joining(", "))
+                : "Sin áreas de intervención";
+
+        //Dto para la respuesta
+        MaterialById responseDto = new MaterialById(
+                newMaterial.getName(),
+                newMaterial.getStock(),
+                newMaterial.getDescription(),
+                newMaterial.getIsComplete(),
+                newMaterial.isSupport(),
+                newMaterial.getStatus(),
+                roomName,
+                areaNames,
+                newMaterial.getHighDate()
+        );
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Material>> getAllMaterials() {
+    public ResponseEntity<List<AllMaterials>> getAllMaterials() {
         List<Material> materials = materialService.getAllMaterials();
-        return new ResponseEntity<>(materials, HttpStatus.OK);
+        List<AllMaterials> dtoList = materials.stream()
+                .map(material -> new AllMaterials(
+                        material.getIdMaterial(),
+                        material.getName().replace("\"", "'"),
+                        material.getStock(),
+                        material.getIsComplete(),
+                        material.isSupport(),
+                        material.getStatus(),
+                        material.getRoom() != null ? material.getRoom().getName() : "Sin area asignada",
+                        material.getHighDate()
+                ))
+                .toList();
+        return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
     @GetMapping("/select/{id}")
-    public ResponseEntity<Material> getMaterialById(@PathVariable String id) {
+    public ResponseEntity<MaterialById> getMaterialById(@PathVariable String id) {
         Material material = materialService.getMaterialById(id);
-        return new ResponseEntity<>(material, HttpStatus.OK);
+
+        // Obtener nombre de las areas de intervencion
+        String areas = material.getMaterialAreas() != null && !material.getMaterialAreas().isEmpty()
+                ? material.getMaterialAreas().stream()
+                    .map(ma -> ma.getInterventionArea().getName())// Obtener el nombre del area de intervención
+                    .collect(Collectors.joining(", "))
+                : "Sin áreas de intervención asignadas";
+
+        MaterialById dtoMaterialById = new MaterialById(
+                material.getName().replace("\"","'"),
+                material.getStock(),
+                material.getDescription(),
+                material.getIsComplete(),
+                material.isSupport(),
+                material.getStatus(),
+                material.getRoom() != null ? material.getRoom().getName() : "Sin sala asignada",
+                areas,
+                material.getHighDate()
+        );
+
+        return new ResponseEntity<>(dtoMaterialById, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Material> updateMaterial(
             @PathVariable String id,
-            @RequestBody RegisterMaterial updatedMaterial) {
-        Material updated = materialService.updateMaterial(id, updatedMaterial);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+            @RequestBody UpdateMaterial updatedMaterial) {
+
+        Material material = new Material();
+        material.setName(updatedMaterial.name().replace("\"","'"));
+        material.setDescription(updatedMaterial.description());
+        material.setStock(updatedMaterial.stock());
+        material.setIsComplete(updatedMaterial.isComplete());
+        material.setSupport(updatedMaterial.isSupport());
+        material.setStatus(updatedMaterial.status());
+
+        materialService.updateMaterial(id, material);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{materialId}/assign/{roomId}")
+    public ResponseEntity<Material> assignMaterialToRoom(
+            @PathVariable String materialId,
+            @PathVariable Long roomId) {
+        Material assignedMaterial = materialService.assignMaterialToRoom(materialId, roomId);
+        return new ResponseEntity<>(assignedMaterial, HttpStatus.OK);
+    }
+
+    @PostMapping("/{materialId}/unassign")
+    public ResponseEntity<Material> unassignMaterialFromRoom(@PathVariable String materialId) {
+        Material unassignedMaterial = materialService.unassignMaterialFromRoom(materialId);
+        return new ResponseEntity<>(unassignedMaterial, HttpStatus.OK);
+    }
+
+    @GetMapping("/unassigned")
+    public ResponseEntity<List<Material>> getUnassignedMaterials() {
+        List<Material> unassignedMaterials = materialService.getUnassignedMaterials();
+        return new ResponseEntity<>(unassignedMaterials, HttpStatus.OK);
     }
 }

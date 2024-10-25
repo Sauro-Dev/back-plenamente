@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.context.annotation.Bean;
 import java.time.LocalDate;
+import java.util.TimeZone;
 
 @SpringBootApplication
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class SgtApplication {
 	private final PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("America/Lima"));
 		SpringApplication.run(SgtApplication.class, args);
 	}
 

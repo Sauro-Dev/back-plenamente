@@ -1,18 +1,34 @@
 package com.plenamente.sgt.service.impl;
 
+import com.plenamente.sgt.domain.entity.Material;
 import com.plenamente.sgt.domain.entity.Room;
+import com.plenamente.sgt.infra.exception.ResourceNotFoundException;
+import com.plenamente.sgt.infra.repository.MaterialRepository;
 import com.plenamente.sgt.infra.repository.RoomRepository;
 import com.plenamente.sgt.service.RoomService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    @Autowired
-    private RoomRepository roomRepository;
+
+    private final RoomRepository roomRepository;
+    private final MaterialRepository materialRepository;
+
+    @Override
+    public List<Material> getMaterialsByRoom(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room no encontrado con id: " + roomId));
+
+        return materialRepository.findByRoom(room);
+    }
+
 
     @Override
     public Room registerRoom(Room room) {
@@ -33,5 +49,11 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<Room> listRoomsByIsTherapeutic(boolean isTherapeutic) {
         return roomRepository.findByIsTherapeutic(isTherapeutic);
+    }
+
+    @Override
+    public Room getRoomById(Long roomId) {
+        return roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room no encontrado con id: " + roomId));
     }
 }
