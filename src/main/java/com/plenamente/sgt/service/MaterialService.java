@@ -9,7 +9,7 @@ public interface MaterialService {
     Material registerMaterial(Material material, Long roomId, List<Long> interventionAreaIds);
     List<Material> getAllMaterials();
     Material getMaterialById(String id);
-    Material updateMaterial(String id, Material material);
+    Material updateMaterial(String id, Material material, Long roomId, List<Long> interventionAreaIds);
     String generateNextMaterialId();
     String incrementAlphaPart(String alphaPart);
 

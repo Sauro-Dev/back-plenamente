@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,8 +41,8 @@ public class Material {
     @JoinColumn(name = "id_room")
     private Room room;
 
-    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<MaterialArea> materialAreas;
+    @OneToMany(mappedBy = "material", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MaterialArea> materialAreas = new ArrayList<>();;
 
     @PrePersist
     public void prePersist() {

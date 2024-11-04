@@ -106,7 +106,7 @@ public class MaterialController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Material> updateMaterial(
+    public ResponseEntity<Void> updateMaterial(
             @PathVariable String id,
             @RequestBody UpdateMaterial updatedMaterial) {
 
@@ -118,7 +118,13 @@ public class MaterialController {
         material.setSupport(updatedMaterial.isSupport());
         material.setStatus(updatedMaterial.status());
 
-        materialService.updateMaterial(id, material);
+        materialService.updateMaterial(
+                id,
+                material,
+                updatedMaterial.roomId(),
+                updatedMaterial.interventionAreaIds()
+        );
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

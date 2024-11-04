@@ -64,7 +64,7 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public Material updateMaterial(String id, Material material) {
+    public Material updateMaterial(String id, Material material, Long roomId, List<Long> interventionAreaIds) {
         Material existingMaterial = materialRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Material no encontrado con id: " + id));
 
@@ -74,6 +74,28 @@ public class MaterialServiceImpl implements MaterialService {
         existingMaterial.setIsComplete(material.getIsComplete());
         existingMaterial.setSupport(material.isSupport());
         existingMaterial.setStatus(material.getStatus());
+
+        // Actualizar la sala
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room no encontrado con id: " + roomId));
+        existingMaterial.setRoom(room);
+
+        // Limpiar las áreas existentes para evitar errores
+        existingMaterial.getMaterialAreas().clear();
+
+        // Actualizar las áreas de intervención
+        List<MaterialArea> materialAreas = interventionAreaIds.stream()
+                .map(interventionAreaId -> {
+                    InterventionArea interventionArea = interventionAreaRepository.findById(interventionAreaId)
+                            .orElseThrow(() -> new EntityNotFoundException("Areá no encontrada con id: " + interventionAreaId));
+
+                    MaterialArea materialArea = new MaterialArea();
+                    materialArea.setMaterial(existingMaterial);
+                    materialArea.setInterventionArea(interventionArea);
+                    return materialArea;
+                }).toList();
+
+        existingMaterial.getMaterialAreas().addAll(materialAreas);
 
         return materialRepository.save(existingMaterial);
     }
